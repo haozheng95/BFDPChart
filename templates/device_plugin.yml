@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: bitfusion-cli-device-plugin
+  namespace: kube-system
+  labels:
+    tier: node
+spec:
+  selector:
+    matchLabels:
+      tier: node
+  template:
+    metadata:
+      labels:
+        tier: node
+    spec:
+      hostNetwork: true
+      containers:
+        - name: device-plugin-ctr
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          securityContext:
+            privileged: true
+          command: ["./start.sh"]
+          volumeMounts:
+            - mountPath: "/etc/bitfusion/tls"
+              name: bitfusion-etc
+            - mountPath: "/var/lib/kubelet"
+              name: kubelet-socket
+            - mountPath: "/etc/kubernetes/pki"
+              name: pki
+      volumes:
+        - name: bitfusion-etc
+          secret:
+            secretName: bitfusion-secret
+        - hostPath:
+            path: "/var/lib/kubelet"
+          name: kubelet-socket
+        - hostPath:
+            path: "/etc/kubernetes/pki"
+          name: pki
