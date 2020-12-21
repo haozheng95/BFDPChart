@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: sidecar-injector
-          image: harbor-repo.vmware.com/bitfusion_device_plugin/sidecar-injector:v0.2.2
+          image: "{{ .Values.image.repository }}/sidecar-injector:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: IfNotPresent
           args:
           - -sidecarCfgFile=/etc/webhook/config/sidecarconfig.yaml

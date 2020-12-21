@@ -61,6 +61,7 @@ data:
         subPath: servers.conf
       - name: bitfusion-usr-bin
         mountPath: /usr/bin/bitfusion
+        subPath: bitfusion
       - name: bitfusion-var-lib
         mountPath: /var/lib
       - name: bitfusion-var-run
